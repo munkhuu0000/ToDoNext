@@ -15,12 +15,21 @@ import { InputGroupButton } from "@/components/ui/input-group";
 import Image from "next/image";
 import { useState } from "react";
 import { nanoid } from "nanoid";
+import { Ghost, Plus, Trash } from "lucide-react";
 
-const tabs = ["All", "Completed", "Incomplete"];
+const tabs = ["All", "Active", "Completed"];
 
 export default function Home() {
   const [todos, setTodos] = useState([]);
   const [value, setValue] = useState("");
+  const [selectedButton, setSelectedButton] = useState("All");
+  const deleteItem = (item) => {
+    const delTodo = todos.filter((el) => {
+      if (el.id == item.id) return false;
+      return true;
+    });
+    setTodos(delTodo);
+  };
   console.log(todos);
 
   return (
@@ -54,7 +63,22 @@ export default function Home() {
           </Button>
         </CardContent>
         <CardContent className="flex gap-1.5">
-          <Button className="bg-[#F3F4F6] text-black hover:bg-[#7dabf5]">
+          {tabs.map((tab) => (
+            <Button
+              key={tab}
+              variant="Ghost"
+              className="flex 1 bg-[#F3F4F6] text-black hover:bg-[#7dabf5]"
+              style={{
+                backgroundColor: tab === selectedButton ? "#3C82F6" : "#F3F4F6",
+              }}
+              onClick={() => {
+                setSelectedButton(tab);
+              }}
+            >
+              {tab}
+            </Button>
+          ))}
+          {/* <Button className="bg-[#F3F4F6] text-black hover:bg-[#7dabf5]">
             All
           </Button>
           <Button className="bg-[#F3F4F6]  text-black hover:bg-[#7dabf5]">
@@ -62,32 +86,44 @@ export default function Home() {
           </Button>
           <Button className="bg-[#F3F4F6]  text-black hover:bg-[#7dabf5]">
             Completed
-          </Button>
+          </Button> */}
         </CardContent>
         <div className="flex flex-col gap-4 px-6 ">
-          {todos.map((item) => (
-            <div key={item.id}>
-              <CardContent className="flex gap-4 justify-between p-0">
-                <Checkbox
-                  onClick={() => {
-                    const newTodos = todos.map((todo) => {
-                      if (todo.id !== item.id) return todo;
-                      return {
-                        isDone: !item.isDone,
-                        text: item.text,
-                        id: item.id,
-                      };
-                    });
-                    setTodos(newTodos);
-                  }}
-                />
-                <p className="flex-1">{item.text}</p>
-                <Button className="bg-[#FEF2F2] text-[#EF4444] font-normal text-sm">
-                  Delete
-                </Button>
-              </CardContent>
-            </div>
-          ))}
+          {todos
+            .filter((item) => {
+              if (selectedButton === "All") return true;
+              if (selectedButton === "Active") return item.isDone === false;
+              return item.isDone === true;
+            })
+            .map((item) => (
+              <div key={item.id}>
+                <CardContent className="flex gap-4 justify-between p-0">
+                  <Checkbox
+                    checked={item.isDone}
+                    onClick={() => {
+                      const newTodos = todos.map((todo) => {
+                        if (todo.id !== item.id) return todo;
+                        return {
+                          isDone: !item.isDone,
+                          text: item.text,
+                          id: item.id,
+                        };
+                      });
+                      setTodos(newTodos);
+                    }}
+                  />
+                  <p className="flex-1">{item.text}</p>
+                  <Button
+                    className="bg-[#FEF2F2] text-[#EF4444] font-normal text-sm"
+                    onClick={() => {
+                      deleteItem(item);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </CardContent>
+              </div>
+            ))}
         </div>
         <CardContent className="flex justify-center">
           <p className="text-[#6B7280]">No tasks yet. Add one above!</p>
