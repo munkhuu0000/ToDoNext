@@ -78,15 +78,6 @@ export default function Home() {
               {tab}
             </Button>
           ))}
-          {/* <Button className="bg-[#F3F4F6] text-black hover:bg-[#7dabf5]">
-            All
-          </Button>
-          <Button className="bg-[#F3F4F6]  text-black hover:bg-[#7dabf5]">
-            Active
-          </Button>
-          <Button className="bg-[#F3F4F6]  text-black hover:bg-[#7dabf5]">
-            Completed
-          </Button> */}
         </CardContent>
         <div className="flex flex-col gap-4 px-6 ">
           {todos
@@ -126,7 +117,25 @@ export default function Home() {
             ))}
         </div>
         <CardContent className="flex justify-center">
-          <p className="text-[#6B7280]">No tasks yet. Add one above!</p>
+          {todos?.length === 0 ? (
+            <p className="text-[#6B7280]">No tasks yet. Add one above!</p>
+          ) : (
+            <div className="flex flex-row justify-between items-center w-full">
+              <div className="flex flex-row gap-3">
+                {todos.filter((todo) => todo.isDone).length} of {todos.length}
+                tasks completed.
+              </div>
+              <div
+                className="text-[#EF4444] font-normal text-sm cursor-pointer"
+                onClick={() => {
+                  const remainingTodos = todos.filter((todo) => !todo.isDone);
+                  setTodos(remainingTodos);
+                }}
+              >
+                Clear completed.
+              </div>
+            </div>
+          )}
         </CardContent>
         <CardContent className="flex justify-center gap-1.5">
           <p className="text-[#6B7280]">Powered by </p>
