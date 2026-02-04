@@ -11,11 +11,8 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { InputGroupButton } from "@/components/ui/input-group";
-import Image from "next/image";
 import { useState } from "react";
 import { nanoid } from "nanoid";
-import { Ghost, Plus, Trash } from "lucide-react";
 
 const tabs = ["All", "Active", "Completed"];
 
@@ -88,7 +85,7 @@ export default function Home() {
             })
             .map((item) => (
               <div key={item.id}>
-                <CardContent className="flex gap-4 justify-between p-0">
+                <CardContent className="flex gap-4 justify-between p-0 items-center">
                   <Checkbox
                     checked={item.isDone}
                     onClick={() => {
@@ -121,9 +118,9 @@ export default function Home() {
             <p className="text-[#6B7280]">No tasks yet. Add one above!</p>
           ) : (
             <div className="flex flex-row justify-between items-center w-full">
-              <div className="flex flex-row gap-3">
+              <div className="flex flex-row gap-2">
                 {todos.filter((todo) => todo.isDone).length} of {todos.length}
-                tasks completed.
+                <span>tasks completed.</span>
               </div>
               <div
                 className="text-[#EF4444] font-normal text-sm cursor-pointer"
